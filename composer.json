@@ -1,0 +1,15 @@
+{
+    "name": "smx-smx/phpbb",
+    "authors": [
+        {
+            "name": "Stefano Moioli",
+            "email": "smxdev4@gmail.com"
+        }
+    ],
+    "require": {
+        "athari/yalinqo": "^2.4"
+    },
+    "autoload": {
+        "psr-4": { "": "src/" }
+    }
+}
