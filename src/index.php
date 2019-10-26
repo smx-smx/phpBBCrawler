@@ -21,6 +21,8 @@ function errHandle($errNo, $errStr, $errFile, $errLine) {
 }
 
 set_error_handler('errHandle');
+assert_options(ASSERT_ACTIVE, true);
+assert_options(ASSERT_BAIL, true);
 
 if($argc < 3){
 	fwrite(STDERR, "Usage: {$argv[0]} <name> <baseUrl> [<username> <password>]" . PHP_EOL);

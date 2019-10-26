@@ -83,12 +83,12 @@ class Post {
 		$this->content = $innerHtml;
 		
 		///// ATTACHMENTS
-		$files = $doc->xpath("//dl[@class='file']//a[@class='postlink']");
+		$files = $doc->xpath("//dl[@class='file']/dt/a[@class='postlink']");
 		foreach($files as $element){
 			$this->attachments[] = new Attachment($this, $element, AttachmentType::File);
 		}
 		
-		$pictures = $doc->xpath("//dt[@class='attach-image']/img[@class='postimage']");
+		$pictures = $doc->xpath("//dl[@class='file']/dt[@class='attach-image']/img[@class='postimage']");
 		foreach($pictures as $element){
 			$this->attachments[] = new Attachment($this, $element, AttachmentType::Picture);
 		}

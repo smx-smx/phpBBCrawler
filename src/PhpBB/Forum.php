@@ -54,10 +54,13 @@ class Forum {
 	
 	public function getTopics(){
 		$html = $this->site->get($this->url);
-		$doc = new HtmlDocument($html);		
+		$doc = new HtmlDocument($html);
 		
 		$lastPage = $this->getLastPage($doc);
-			
+		
+		$paginationText = trim($doc->xpath("//div[@class='pagination']")[0]->textContent);
+		$numberOfTopics = intval(explode(' ', $paginationText)[0]);
+
 		$topics = array();
 		
 		$topicXpath = "//ul[@class='topiclist topics']//dl[contains(@class, 'row-item')]//div[@class='list-inner']";
@@ -68,9 +71,7 @@ class Forum {
 			$aUser = $tdoc->xpath("//a[contains(@class, 'username')]")[0];
 			
 			$textNode = utf8_decode($aUser->parentNode->textContent);
-			$parts = explode('« ', $textNode);
-			$lastPart = end($parts);
-			if(strpos($lastPart, "in") === 0){
+			if(strpos($textNode, "Posted in") !== FALSE){
 				// links to another forum, skip!
 				continue;
 			}
@@ -95,7 +96,7 @@ class Forum {
 			$doc = new HtmlDocument($html);
 		}
 		
-		
+		//assert(count($topics) == $numberOfTopics);
 		return $topics;
 	}
 }

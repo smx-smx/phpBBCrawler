@@ -47,7 +47,7 @@ class Website {
 		
 		$sidNodes = $doc->xpath("//input[@type='hidden'][@name='sid']/@value");
 		if(count($sidNodes) == 0)
-			return;		
+			return false;	
 		$sid = $sidNodes[0]->textContent;
 		
 		$redirect = array_map(function($itm){
@@ -62,6 +62,7 @@ class Website {
 			'sid' => $sid,
 			'login' => 'Login'
 		));
+		return true;
 	}
 	
 	public function getForumGroups(){

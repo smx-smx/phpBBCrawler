@@ -58,8 +58,8 @@ class Topic {
 		
 		$this->opNick = $user->textContent;
 		//print($this->name . "[{$this->getId()}]\n");
-		$dateStr = utf8_decode($user->parentNode->textContent);
-		$dateStr = explode('« ', $dateStr)[0];
+		$dateStr = $user->parentNode->textContent;
+		$dateStr = trim(preg_split('/(?:«|»)\s+/', $dateStr)[1]);
 		$this->opDate = strtotime($dateStr);
 	}
 	
@@ -71,6 +71,9 @@ class Topic {
 		$html = $this->site->get($this->url);
 		$doc = new \Lib\HtmlDocument($html);
 		$lastPage = $this->getLastPage($doc);
+		
+		$paginationText = trim($doc->xpath("//div[@class='pagination']")[0]->textContent);
+		$numberOfPosts = intval(explode(' ', $paginationText)[0]);
 		
 		$posts = array();				
 		$offset = 0;
@@ -90,6 +93,8 @@ class Topic {
 			$html = $this->site->get($url);
 			$doc = new \Lib\HtmlDocument($html);
 		}
+		
+		assert(count($posts) == $numberOfPosts);
 		
 		return $posts;
 	}
