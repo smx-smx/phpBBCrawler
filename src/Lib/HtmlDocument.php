@@ -11,12 +11,30 @@ class HtmlDocument {
 	public function __construct($html){
 		libxml_use_internal_errors(true);
 		$this->dom = new \DOMDocument();
-		$this->dom->loadHTML($html);
+		$this->dom->encoding = 'utf-8';
+		$this->dom->loadHTML(mb_convert_encoding($html,	'HTML-ENTITIES', 'UTF-8'));
 	}
 	
-	public static function fromNode(\DOMNode $node){
+	private function getCharset(){
+		$charset = \YaLinqo\Enumerable::from($this->xpath("//meta"))
+				->where(function($node){
+					return $node->hasAttribute('charset');
+				})
+				->select(function($node){
+					return $node->getAttribute('charset');
+				})
+				->firstOrDefault();
+				
+		return $charset;
+	}
+	
+	public static function fromNode(\DOMNode $node, $charset = 'utf-8'){
 		$html = $node->ownerDocument->saveHTML($node);
-		return new HtmlDocument($html);
+		$html = "<meta charset=\"{$charset}\">" . $html;
+		
+		$doc = new HtmlDocument($html);
+		assert($doc->getCharset() == $charset);
+		return $doc;
 	}
 	
 	/**
