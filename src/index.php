@@ -22,15 +22,17 @@ function errHandle($errNo, $errStr, $errFile, $errLine) {
 
 set_error_handler('errHandle');
 
-if($argc < 5){
-	fwrite(STDERR, "Usage: {$argv[0]} <name> <baseUrl> <username> <password>" . PHP_EOL);
+if($argc < 3){
+	fwrite(STDERR, "Usage: {$argv[0]} <name> <baseUrl> [<username> <password>]" . PHP_EOL);
 	return 1;
 }
 $name = $argv[1];
 $baseUrl = $argv[2];
-$username = $argv[3];
-$password = $argv[4];
 
 $exporter = new Exporter($name, $baseUrl);
-$exporter->login($username, $password);
+if($argc > 3){
+	$username = $argv[3];
+	$password = $argv[4];	
+	$exporter->login($username, $password);
+}
 $exporter->run();
